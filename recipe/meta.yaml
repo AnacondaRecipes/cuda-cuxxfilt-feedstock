@@ -1,6 +1,6 @@
 {% set name = "cuda-cuxxfilt" %}
-{% set version = "12.4.127" %}
-{% set cuda_version = "12.4" %}
+{% set version = "12.8.90" %}
+{% set cuda_version = "12.8" %}
 {% set platform = "linux-x86_64" %}  # [linux64]
 {% set platform = "linux-ppc64le" %}  # [ppc64le]
 {% set platform = "linux-sbsa" %}  # [aarch64]
@@ -18,29 +18,36 @@ package:
 
 source:
   url: https://developer.download.nvidia.com/compute/cuda/redist/cuda_cuxxfilt/{{ platform }}/cuda_cuxxfilt-{{ platform }}-{{ version }}-archive.{{ extension }}
-  sha256: 5c9a74786bc84dee6f2ea941f3933ce77bfa26a9135a8d38ee8c3a7183b9b200  # [linux64]
-  sha256: 3bbf33a7a4757c82900500940e8cfe8b1a42a4a7e48e9cd732c5fb94f3433704  # [ppc64le]
-  sha256: e8bb04577e3271477b43c6948c5a39686c93d22f87ddeefd838682298ee399ef  # [aarch64]
-  sha256: 646d523d25f8cfa0feb731b2220da15065ecc793b2a830a81bf537e16d273dd9  # [win]
+  sha256: cbe77c55b2e9a9bf777e88db01d320d227017075c35d0a96448fb5bd6b5697f2  # [linux64]
+  sha256: 454ec6ab8fa8123dabe14d3f937ced9d14fdeb8447a58589aca63b8acb82517d  # [aarch64]
+  sha256: 6f2af4a5e3947690005f3efb527c16b21ae8664e342795a70185a50c56acfb02  # [win]
 
 build:
   number: 1
-  skip: true  # [osx or (linux and s390x)]
+  binary_relocation: false
+  skip: true  # [osx or ppc64le]
 
 requirements:
   build:
     - {{ compiler("c") }}
     - {{ compiler("cxx") }}
+    - {{ stdlib("c") }}
+    - cf-nvidia-tools 1  # [linux]
   host:
     - cuda-version {{ cuda_version }}
   run:
     - {{ pin_compatible("cuda-version", max_pin="x.x") }}
 
 test:
+  requires:
+    - patchelf  # [linux]
+  files:
+    - test-rpath.sh
   commands:
     - test -f $PREFIX/bin/cu++filt                                   # [linux]
     - test -f $PREFIX/targets/{{ target_name }}/include/nv_decode.h  # [linux]
     - test -f $PREFIX/targets/{{ target_name }}/lib/libcufilt.a      # [linux]
+    - bash test-rpath.sh                                             # [linux]
     - if not exist %LIBRARY_BIN%\\cu++filt.exe exit 1                # [win]
     - if not exist %LIBRARY_INC%\\nv_decode.h exit 1                 # [win]
     - if not exist %LIBRARY_LIB%\\cufilt.lib exit 1                  # [win]
