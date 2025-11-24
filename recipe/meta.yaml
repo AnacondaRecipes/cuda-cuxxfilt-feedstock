@@ -1,6 +1,6 @@
 {% set name = "cuda-cuxxfilt" %}
-{% set version = "12.8.90" %}
-{% set cuda_version = "12.8" %}
+{% set version = "13.0.85" %}
+{% set cuda_version = "13.0" %}
 {% set platform = "linux-x86_64" %}  # [linux64]
 {% set platform = "linux-ppc64le" %}  # [ppc64le]
 {% set platform = "linux-sbsa" %}  # [aarch64]
@@ -18,12 +18,12 @@ package:
 
 source:
   url: https://developer.download.nvidia.com/compute/cuda/redist/cuda_cuxxfilt/{{ platform }}/cuda_cuxxfilt-{{ platform }}-{{ version }}-archive.{{ extension }}
-  sha256: cbe77c55b2e9a9bf777e88db01d320d227017075c35d0a96448fb5bd6b5697f2  # [linux64]
-  sha256: 454ec6ab8fa8123dabe14d3f937ced9d14fdeb8447a58589aca63b8acb82517d  # [aarch64]
-  sha256: 6f2af4a5e3947690005f3efb527c16b21ae8664e342795a70185a50c56acfb02  # [win]
+  sha256: ae1acfe8dca8453e0b243ecde8a45e88a9584bf050b307b96ec9dc286fd8e714  # [linux64]
+  sha256: 8f0dd0433d2fa4591f7dbdf8169ec4b355fe567657dd28bc8ac2e8ec41fda4f9  # [aarch64]
+  sha256: f885168de4d35ee4c8ea3d37068bc476726310334dcbcc74e2c1b76b3d088ece  # [win]
 
 build:
-  number: 1
+  number: 0
   binary_relocation: false
   skip: true  # [osx or ppc64le]
 
@@ -48,9 +48,9 @@ test:
     - test -f $PREFIX/targets/{{ target_name }}/include/nv_decode.h  # [linux]
     - test -f $PREFIX/targets/{{ target_name }}/lib/libcufilt.a      # [linux]
     - bash test-rpath.sh                                             # [linux]
-    - if not exist %LIBRARY_BIN%\\cu++filt.exe exit 1                # [win]
+    - if not exist %LIBRARY_BIN%\cu++filt.exe exit 1                 # [win]
     - if not exist %LIBRARY_INC%\\nv_decode.h exit 1                 # [win]
-    - if not exist %LIBRARY_LIB%\\cufilt.lib exit 1                  # [win]
+    - if not exist %LIBRARY_LIB%\{{ target_name }}\cufilt.lib exit 1  # [win]
 
 about:
   home: https://developer.nvidia.com/cuda-toolkit
