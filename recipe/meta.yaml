@@ -26,9 +26,9 @@ source:
   sha256: ec5911d680394d90968c480c7359e7f5a4025b9c4806dad673d489e57585afd3  # [win]
 
 build:
-  number: 1
+  number: 0
   binary_relocation: false
-  skip: true  # [osx or ppc64le]
+  skip: true  # [osx]
 
 requirements:
   build:
@@ -61,6 +61,7 @@ about:
   license_file: LICENSE
   license: LicenseRef-NVIDIA-End-User-License-Agreement
   license_url: https://docs.nvidia.com/cuda/eula/index.html
+  license_family: Other
   summary: cu++filt decodes low-level identifiers that have been mangled by CUDA C++
   description: |
     cu++filt decodes (demangles) low-level identifiers that have been mangled by
@@ -68,6 +69,7 @@ about:
     output of cu++filt is either the demangled name if the name decodes to a CUDA
     C++ name, or the original name itself.
   doc_url: https://docs.nvidia.com/cuda/index.html
+  dev_url: https://docs.nvidia.com/cuda/index.html
 
 extra:
   recipe-maintainers:
